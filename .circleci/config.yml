@@ -55,4 +55,4 @@ jobs:
       - run: mix test
 
       - store_test_results:
-          path: _build/test/lib/hello_phoenix
+          path: _build/test/lib/worte
