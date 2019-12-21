@@ -6,9 +6,9 @@ defaults: &defaults
   working_directory: ~/app # directory where steps will run
 
   docker: # run the steps with Docker
-    - image: circleci/elixir
-        environment: # environment variables for primary container
-        MIX_ENV: test
+  - image: circleci/elixir
+      environment: # environment variables for primary container
+      MIX_ENV: test
     # database image
       # - image: circleci/postgres:10.1-alpine
       #   environment:
