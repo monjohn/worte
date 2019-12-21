@@ -21,6 +21,7 @@ jobs:
       - image: circleci/elixir
         environment:
           MIX_ENV: test
+          DATABASE_URL: ecto://USER:PASS@HOST/DATABASE
     steps:
       - checkout
 
