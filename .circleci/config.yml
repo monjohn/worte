@@ -21,7 +21,6 @@ jobs:
       - image: circleci/elixir
         environment:
           MIX_ENV: test
-          DATABASE_URL: ecto://USER:PASS@HOST/DATABASE
     steps:
       - checkout
 
@@ -73,6 +72,7 @@ jobs:
       - image: circleci/elixir
         environment: # environment variables for primary container
           MIX_ENV: prod
+          DATABASE_URL: ecto://USER:PASS@HOST/DATABASE
     steps:
       - checkout # check out source code to working directory
       - run: mix local.hex --force # install Hex locally (without prompt)
