@@ -9,7 +9,8 @@ defmodule Worte.Application do
     # List all child processes to be supervised
     children = [
       # Start the Ecto repository
-      Worte.Repo,
+      # TODO: uncomment the following line to renable the Database
+      # Worte.Repo,
       # Start the endpoint when the application starts
       WorteWeb.Endpoint
       # Starts a worker by calling: Worte.Worker.start_link(arg)

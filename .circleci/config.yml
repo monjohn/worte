@@ -1,21 +1,24 @@
 # Elixir CircleCI 2.0 configuration file
 #
-version: 2
-jobs:
-  build:
-    parallelism: 1
-    docker:
-      - image: circleci/elixir:1.7.3
-        environment:
-          MIX_ENV: test
+defaults: &defaults
+  parallelism: 1 # run only one instance of this job in parallel
+
+  working_directory: ~/app # directory where steps will run
+
+  docker: # run the steps with Docker
+    - image: circleci/elixir
+      environment: # environment variables for primary container
+        MIX_ENV: test
+    # database image
       - image: circleci/postgres:10.1-alpine
         environment:
           POSTGRES_USER: postgres
           POSTGRES_DB: app_test
           POSTGRES_PASSWORD:
 
-    working_directory: ~/app
-
+version: 2
+jobs:
+  test:
     steps:
       - checkout
 
@@ -56,3 +59,47 @@ jobs:
 
       - store_test_results:
           path: _build/test/lib/worte
+  deploy:
+    <<: *defaults
+    - image: circleci/elixir
+      environment: # environment variables for primary container
+        MIX_ENV: prod
+    steps:
+      - checkout # check out source code to working directory
+      - run: mix local.hex --force # install Hex locally (without prompt)
+      - run: mix local.rebar --force # fetch a copy of rebar (without prompt)
+
+      - copy: mix.exs mix.lock ./
+      - copy: config config
+      - run: mix deps.get
+      - run: mix deps.compile # get updated dependencies & compile them
+
+      # build assets
+      - copy: assets assets
+      - run: cd assets && npm install && npm run deploy
+      - run: mix phx.digest
+
+      # build project
+      - copy: priv priv
+      - copy: lib lib
+      - run: mix compile
+
+      # build release
+      - copy: rel rel
+      - run: mix release
+
+      - run:
+          name: Deploy if tests pass and branch is develop
+          command: bash scripts/deploy.sh
+
+workflows:
+  version: 2
+  build-test-and-deploy-staging:
+    jobs:
+      - test
+      - deploy:
+          requires:
+            - test
+          filters:
+            branches:
+              only: master

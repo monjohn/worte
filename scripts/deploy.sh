@@ -1,0 +1,1 @@
+scp /app/_build/prod/rel/worte deploy@157.245.15.177:/build/  
