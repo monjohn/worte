@@ -3,23 +3,24 @@
 defaults: &defaults
   parallelism: 1 # run only one instance of this job in parallel
 
-  working_directory: ~/app # directory where steps will run
-
-  docker:
-  - image: circleci/elixir
-      environment:
-      MIX_ENV: test
+  working_directory:
+    ~/app # directory where steps will run
 
     # database image
-      # - image: circleci/postgres:10.1-alpine
-      #   environment:
-      #     POSTGRES_USER: postgres
-      #     POSTGRES_DB: app_test
-      #     POSTGRES_PASSWORD:
+  # - image: circleci/postgres:10.1-alpine
+  #   environment:
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_DB: app_test
+  #     POSTGRES_PASSWORD:
 
 version: 2
 jobs:
   test:
+    <<: *defaults
+    docker:
+      - image: circleci/elixir
+        environment:
+          MIX_ENV: test
     steps:
       - checkout
 
@@ -38,19 +39,24 @@ jobs:
       - run: mix do deps.get, compile
       - save_cache:
           key: v1-mix-cache-{{ .Branch }}-{{ checksum "mix.lock" }}
-          paths: 'deps'
+          paths:
+            - "deps"
       - save_cache:
           key: v1-mix-cache-{{ .Branch }}
-          paths: 'deps'
+          paths:
+            - "deps"
       - save_cache:
           key: v1-mix-cache
-          paths: 'deps'
+          paths:
+            - "deps"
       - save_cache:
           key: v1-build-cache-{{ .Branch }}
-          paths: '_build'
+          paths:
+            - "deps"
       - save_cache:
           key: v1-build-cache
-          paths: '_build'
+          paths:
+            - "_build"
 
       - run:
           name: Wait for DB
@@ -60,11 +66,14 @@ jobs:
 
       - store_test_results:
           path: _build/test/lib/worte
+
   deploy:
     <<: *defaults
-    - image: circleci/elixir
-      environment: # environment variables for primary container
-        MIX_ENV: prod
+
+    docker:
+      - image: circleci/elixir
+        environment: # environment variables for primary container
+          MIX_ENV: prod
     steps:
       - checkout # check out source code to working directory
       - run: mix local.hex --force # install Hex locally (without prompt)
@@ -99,7 +108,8 @@ workflows:
     jobs:
       - test
       - deploy:
-          requires: test
+          requires:
+            - test
           filters:
             branches:
               only: master
