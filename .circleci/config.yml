@@ -97,6 +97,7 @@ jobs:
       # build release
       # - run: docker cp rel rel
       - run: mix release
+      - run: ssh-keyscan -H 157.245.15.177 >> ~/.ssh/known_hosts
 
       - run:
           name: Deploy if tests pass and branch is develop
