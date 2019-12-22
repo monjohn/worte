@@ -78,23 +78,23 @@ jobs:
       - run: mix local.hex --force # install Hex locally (without prompt)
       - run: mix local.rebar --force # fetch a copy of rebar (without prompt)
 
-      - run: copy mix.exs mix.lock ./
-      - run: copy config config
+      - run: docker cp mix.exs mix.lock ./
+      - run: docker cp config config
       - run: mix deps.get
       - run: mix deps.compile # get updated dependencies & compile them
 
       # build assets
-      - run: copy assets assets
+      - run: docker cp assets assets
       - run: cd assets && npm install && npm run deploy
       - run: mix phx.digest
 
       # build project
-      - run: copy priv priv
-      - run: copy lib lib
+      - run: docker cp priv priv
+      - run: docker cp lib lib
       - run: mix compile
 
       # build release
-      - run: copy rel rel
+      - run: docker cp rel rel
       - run: mix release
 
       - run:
