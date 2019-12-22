@@ -78,7 +78,8 @@ jobs:
       - run: mix local.hex --force # install Hex locally (without prompt)
       - run: mix local.rebar --force # fetch a copy of rebar (without prompt)
 
-      - run: docker cp mix.exs mix.lock ./
+      - run: docker cp mix.exs  ./
+      - run: docker cp mix.lock ./
       - run: docker cp config config
       - run: mix deps.get
       - run: mix deps.compile # get updated dependencies & compile them
