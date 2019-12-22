@@ -101,8 +101,7 @@ jobs:
 
       - run:
           name: Deploy if tests pass and branch is develop
-          # command: bash scripts/deploy.sh
-          command: scp -r _build/prod/rel/worte deploy@157.245.15.177:/build
+          command: scp -r _build/prod/rel/worte deploy@157.245.15.177:build
 
 workflows:
   version: 2
