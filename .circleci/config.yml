@@ -69,7 +69,7 @@ jobs:
     <<: *defaults
 
     docker:
-      - image: circleci/elixir
+      - image: circleci/elixir-node
         environment: # environment variables for primary container
           MIX_ENV: prod
           DATABASE_URL: ecto://USER:PASS@HOST/DATABASE
