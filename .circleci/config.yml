@@ -68,11 +68,11 @@ jobs:
   deploy:
     <<: *defaults
 
-   machine:
-    image: ubuntu-1604:latest
-      environment: # environment variables for primary container
-        MIX_ENV: prod
-        DATABASE_URL: ecto://USER:PASS@HOST/DATABASE
+    machine:
+     image: ubuntu-1604:latest
+       environment: # environment variables for primary container
+         MIX_ENV: prod
+         DATABASE_URL: ecto://USER:PASS@HOST/DATABASE
     steps:
       - run: wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb && sudo dpkg -i erlang-solutions_2.0_all.deb
       - run: apt-get update
