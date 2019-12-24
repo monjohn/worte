@@ -70,6 +70,7 @@ jobs:
     docker:
       - image: circleci/elixir
     steps:
+      - add_ssh_keys
       - run: ssh-keyscan -H 157.245.15.177 >> ~/.ssh/known_hosts
       - run:
           name: Deploy if tests pass and branch is develop
