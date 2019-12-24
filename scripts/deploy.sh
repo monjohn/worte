@@ -1,1 +1,8 @@
-scp /app/_build/prod/rel/worte deploy@157.245.15.177:/build/  
+#! /usr/bin/env bash
+mix deps.get
+mix deps.compile # get updated dependencies & compile them
+mix do ecto.create, ecto.migrate(PROJECT) 
+cd assets && npm install && npm run deploy & cd ..
+mix phx.digest
+mix compile
+MIX_ENV=prod mix release
