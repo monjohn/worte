@@ -67,6 +67,8 @@ jobs:
 
   deploy:
     <<: *defaults
+    docker:
+      - image: alpine
     steps:
       - run: ssh-keyscan -H 157.245.15.177 >> ~/.ssh/known_hosts
       - run:
