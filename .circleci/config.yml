@@ -67,13 +67,6 @@ jobs:
 
   deploy:
     <<: *defaults
-
-    machine:
-      image:
-        ubuntu-1804
-        #  environment: true
-        #    MIX_ENV: prod
-        #    DATABASE_URL: ecto://USER:PASS@HOST/DATABASE
     steps:
       - run: ssh-keyscan -H 157.245.15.177 >> ~/.ssh/known_hosts
       - run:
