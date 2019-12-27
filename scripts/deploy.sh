@@ -1,5 +1,5 @@
 #! /usr/bin/env bash
-exec bash
+. ~/.bashrc
 
 cd ~/worte 
 git pull
