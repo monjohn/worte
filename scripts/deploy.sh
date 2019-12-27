@@ -16,4 +16,4 @@ mix phx.digest
 mix compile
 MIX_ENV=prod mix release --overwrite
 
-_build/prod/rel/my_app/bin/worte daemon_iex
+_build/prod/rel/worte/bin/worte daemon_iex
