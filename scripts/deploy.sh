@@ -16,6 +16,6 @@ npm run deploy --prefix ./assets
 # cd assets && npm install && npm run deploy & cd ..
 mix phx.digest
 mix compile
-MIX_ENV=prod mix release
+MIX_ENV=prod mix release --overwrite
 
-PORT=4001 MIX_ENV=prod elixir --erl "-detached" -S mix phx.server
+_build/prod/rel/my_app/bin/my_app daemon_iex
