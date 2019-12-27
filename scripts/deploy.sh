@@ -1,7 +1,10 @@
 #! /usr/bin/env bash
+exec bash
 
 cd ~/worte 
 git pull
+
+mix --version
 
 mix deps.get --only prod
 MIX_ENV=prod mix compile
