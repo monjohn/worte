@@ -15,7 +15,10 @@ config :worte, WorteWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "FVo260eHWIrartDfdo889+JDTJoTHDMBpcFvyAqgIR8xEfsK1aM5i5y3IMOX93S6",
   render_errors: [view: WorteWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: Worte.PubSub, adapter: Phoenix.PubSub.PG2]
+  pubsub: [name: Worte.PubSub, adapter: Phoenix.PubSub.PG2],
+  live_view: [
+    signing_salt: "aTRPu641xglQzzRFhtodo0+2rYdDut7B"
+  ]
 
 # Configures Elixir's Logger
 config :logger, :console,

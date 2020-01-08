@@ -1,6 +1,9 @@
 defmodule WorteWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :worte
 
+  # , websocket: [connect_info: [session: @session_options]]
+  socket "/live", Phoenix.LiveView.Socket
+
   socket "/socket", WorteWeb.UserSocket,
     websocket: true,
     longpoll: false
