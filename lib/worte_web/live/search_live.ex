@@ -3,6 +3,7 @@ defmodule WorteWeb.SearchLive do
 
   def render(assigns) do
     ~L"""
+    <div>
     <form phx-change="suggest" phx-submit="search">
       <input type="text" name="q" value="<%= @query %>" list="matches" placeholder="Search..."
              <%= if @loading, do: "readonly" %>/>
@@ -11,8 +12,22 @@ defmodule WorteWeb.SearchLive do
           <option value="<%= match %>"><%= match %></option>
         <% end %>
       </datalist>
-      <%= if @result do %><pre><%= @result %></pre><% end %>
     </form>
+      <%= if @result do %>
+        <%= for [definition | rest] <- @result  do %>
+          <div class="definition">
+            <span><%= elem(definition,0) %></span>
+            <span><%= elem(definition,1) %></span>
+          </div>
+          <%= for word <- rest  do %>
+            <div class="example">
+              <span><%= elem(word,0) %></span>
+              <span><%= elem(word,1) %></span>
+            </div>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
     """
   end
 
@@ -21,17 +36,22 @@ defmodule WorteWeb.SearchLive do
   end
 
   def handle_event("suggest", %{"q" => query}, socket) when byte_size(query) <= 100 do
-    {words, _} = System.cmd("grep", ~w"^#{query}.* -m 5 /usr/share/dict/words")
-    {:noreply, assign(socket, matches: String.split(words, "\n"))}
+    words = Worte.Worterbuch.find_defined_words(query)
+    IO.inspect(words)
+    {:noreply, assign(socket, matches: words)}
   end
 
   def handle_event("search", %{"q" => query}, socket) when byte_size(query) <= 100 do
     send(self(), {:search, query})
-    {:noreply, assign(socket, query: query, result: "Searching...", loading: true, matches: [])}
+    {:noreply, assign(socket, query: query, result: nil, loading: true, matches: [])}
   end
 
   def handle_info({:search, query}, socket) do
-    {result, _} = System.cmd("dict", ["#{query}"], stderr_to_stdout: true)
+    IO.puts("handle_info")
+    result = Worte.Worterbuch.find_definition(query)
+    # IO.inspect(words)
+    # result = Enum.map(words, &List.first/1)
+    IO.inspect(result)
     {:noreply, assign(socket, loading: false, result: result, matches: [])}
   end
 end

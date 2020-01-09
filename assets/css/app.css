@@ -4,3 +4,14 @@
 
 /*  this is optional */
 @import '../../deps/phoenix_live_view/assets/css/live_view.css';
+
+.definition {
+  display: flex;
+  justify-content: space-between;
+}
+
+.example {
+  display: flex;
+  justify-content: space-between;
+  margin: 5px 20px;
+}
