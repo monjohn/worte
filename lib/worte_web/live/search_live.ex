@@ -1,6 +1,31 @@
 defmodule WorteWeb.SearchLive do
   use Phoenix.LiveView
 
+
+  def mount(_params, _session, socket) do
+    {:ok, assign(socket, query: nil, result: nil, loading: false, matches: [])}
+  end
+
+  def handle_event("suggest", %{"q" => query}, socket) when byte_size(query) <= 100 do
+    words = Worte.Worterbuch.find_defined_words(query)
+    IO.inspect(words)
+    {:noreply, assign(socket, matches: words)}
+  end
+
+  def handle_event("search", %{"q" => query}, socket) when byte_size(query) <= 100 do
+    send(self(), {:search, query})
+    {:noreply, assign(socket, query: query, result: nil, loading: true, matches: [])}
+  end
+
+  def handle_info({:search, query}, socket) do
+    IO.puts("handle_info")
+    result = Worte.Worterbuch.find_definition(query)
+    # IO.inspect(words)
+    # result = Enum.map(words, &List.first/1)
+    IO.inspect(result)
+    {:noreply, assign(socket, loading: false, result: result, matches: [])}
+  end
+
   def render(assigns) do
     ~L"""
     <div>
@@ -29,29 +54,5 @@ defmodule WorteWeb.SearchLive do
       <% end %>
     </div>
     """
-  end
-
-  def mount(_session, socket) do
-    {:ok, assign(socket, query: nil, result: nil, loading: false, matches: [])}
-  end
-
-  def handle_event("suggest", %{"q" => query}, socket) when byte_size(query) <= 100 do
-    words = Worte.Worterbuch.find_defined_words(query)
-    IO.inspect(words)
-    {:noreply, assign(socket, matches: words)}
-  end
-
-  def handle_event("search", %{"q" => query}, socket) when byte_size(query) <= 100 do
-    send(self(), {:search, query})
-    {:noreply, assign(socket, query: query, result: nil, loading: true, matches: [])}
-  end
-
-  def handle_info({:search, query}, socket) do
-    IO.puts("handle_info")
-    result = Worte.Worterbuch.find_definition(query)
-    # IO.inspect(words)
-    # result = Enum.map(words, &List.first/1)
-    IO.inspect(result)
-    {:noreply, assign(socket, loading: false, result: result, matches: [])}
   end
 end

@@ -13,10 +13,10 @@ defmodule Worte.Worterbuch do
 
   """
   def find_defined_words(word) do
-    Worte.Store.find("^#{word} {")
+    Worte.Store.find("^#{word}\s{")
     |> Enum.map(fn match ->
       String.split(match, "{", trim: true) |> List.first()
-    end) || []
+    end)
   end
 
   def find_definition(word) do
